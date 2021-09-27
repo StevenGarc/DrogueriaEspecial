@@ -107,4 +107,4 @@ BEGIN
 END;
 //
 DELIMITER ; 
-call generar_interfaz_wc();     
+call generar_consolidado();     

@@ -215,6 +215,21 @@ create table interfaz_wc(
    Atributo1_global varchar(100)
 );
 
+CREATE TABLE Droguerias (
+   Nombre varchar(13),
+   identificativo varchar(1)
+);
+DELETE FROM Droguerias
+INSERT INTO Droguerias VALUE('BellaVista','A');
+INSERT INTO Droguerias VALUE('CiudadJardin','B');
+INSERT INTO Droguerias VALUE('La9','C');
+INSERT INTO Droguerias VALUE('La68','D');
+INSERT INTO Droguerias VALUE('La95','E');
+INSERT INTO Droguerias VALUE('SantaSofia','F');
+INSERT INTO Droguerias VALUE('Suba','G');
+INSERT INTO Droguerias VALUE('Villas','H');
+
+
 
 create table siglas (
     sigla varchar(10),
