@@ -1,0 +1,81 @@
+
+set sql_mode=ORACLE;
+DELIMITER //
+DROP PROCEDURE IF EXISTS insertar_consolidado //
+CREATE PROCEDURE insertar_consolidado(r_consistentes_tmp consistentes_tmp%RowType) AS 
+
+BEGIN
+   INSERT INTO consolidado(
+      drogueria ,
+      fecha ,
+      CodProducto ,
+      Nombre ,
+      Presentacion ,
+      Laboratorio ,
+      Ubicacion ,
+      Exento  ,
+      Excluido ,
+      NoGravado ,
+      Gravado ,
+      Costo ,
+      ContenidoIntCaja  ,
+      ContenidoIntBlister ,
+      ContenidoIntUnidad ,
+      Iva ,
+      InventarioCaja ,
+      InventarioBlister ,
+      InventarioUnidad ,
+      CostoCaja ,
+      CostoBlister ,
+      CostoUnidad ,
+      ValorIvaCaja ,
+      ValorIvaBlister ,
+      ValorIvaUnidad ,
+      CostoTotal ,
+      CostoTotalIva ,
+      VentaTotal ,
+      Sucursal ,
+      CodigoBarras ,
+      PrecioUnidad ,
+      PrecioCaja ,
+      PrecioBlister ,
+      IdProducto
+   ) values(
+      r_consistentes_tmp.drogueria ,
+      r_consistentes_tmp.fecha ,
+      r_consistentes_tmp.CodProducto ,
+      r_consistentes_tmp.Nombre ,
+      r_consistentes_tmp.Presentacion ,
+      r_consistentes_tmp.Laboratorio ,
+      r_consistentes_tmp.Ubicacion ,
+      r_consistentes_tmp.Exento  ,
+      r_consistentes_tmp.Excluido ,
+      r_consistentes_tmp.NoGravado ,
+      r_consistentes_tmp.Gravado ,
+      r_consistentes_tmp.Costo ,
+      r_consistentes_tmp.ContenidoIntCaja  ,
+      r_consistentes_tmp.ContenidoIntBlister ,
+      r_consistentes_tmp.ContenidoIntUnidad ,
+      r_consistentes_tmp.Iva ,
+      r_consistentes_tmp.InventarioCaja ,
+      r_consistentes_tmp.InventarioBlister ,
+      r_consistentes_tmp.InventarioUnidad ,
+      r_consistentes_tmp.CostoCaja ,
+      r_consistentes_tmp.CostoBlister ,
+      r_consistentes_tmp.CostoUnidad ,
+      r_consistentes_tmp.ValorIvaCaja ,
+      r_consistentes_tmp.ValorIvaBlister ,
+      r_consistentes_tmp.ValorIvaUnidad ,
+      r_consistentes_tmp.CostoTotal ,
+      r_consistentes_tmp.CostoTotalIva ,
+      r_consistentes_tmp.VentaTotal ,
+      r_consistentes_tmp.Sucursal ,
+      r_consistentes_tmp.CodigoBarras ,
+      r_consistentes_tmp.PrecioUnidad ,
+      r_consistentes_tmp.PrecioCaja ,
+      r_consistentes_tmp.PrecioBlister ,
+      r_consistentes_tmp.IdProducto
+   );
+END
+//
+DELIMITER ;
