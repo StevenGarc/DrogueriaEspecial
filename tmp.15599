@@ -1,0 +1,5 @@
+LOAD DATA INFILE ''
+    INTO TABLE discounts 
+    FIELDS TERMINATED BY ',' 
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n';

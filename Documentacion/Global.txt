@@ -1,0 +1,119 @@
+Los procesos que se llevaran a cabo para cargar los productos a la tienda son los siguientes:
+    1) Seleccion de las droguerias con el inventario a cargar. resposable: gerencia.
+    2) Seleccion de productos a vender. resposable: operaciones, se inicara con el listado de productos mas vendidos de las tres driguerias mencionadas.
+    3) Consolidacion y validacion de productos. resposable: IT, ver descripcion mas adelante.
+    4) Ajuste de inconsistencias. resposable: operaciones.
+    5) Calculo de precios para la tienda. resposable: IT y gerencia
+    6) Carge de productos consistentes a la tienda.
+    7) Alertar errores de procesos
+
+1) Seleccion de las droguerias con el inventario a cargar:
+    Inicialmente se trabajaran tres droguerias, cedritos, 68 y suba, que son las droguerias de las que tiene el listado de
+    productos de mayor rotacion. 
+
+2) Seleccion de productos a vender:
+    Los producto de la lista de mayor rotacion que son consistentes en las tres droguerias son los que se empezaran a vender
+    en la tienda.
+
+3) Consolidacion y validacion de productos:
+
+    A nivel detallado los pasos que deben seguir son:
+        a) Extraer los datos de cada drogueria
+        b) Extraer datos de WC
+        c) Reportar inconsistencias
+
+    a) Extraer los datos de cada drogueria seleccionada
+        Para cada drogueria:
+            - OK Desde cliente Sql server local generar inventario-yyyymmdd-NombreDrogueria.csv con query_inventario_droguerias.bat 
+            - OK Desde cliente Sql server local generar CodigoBarras-yyyymmdd-NombreDrogueria.csv con query_inventario_droguerias.bat
+            - Copiar inventario-yyyymmdd-NombreDrogueria.csv a sftp central inventarios-yyyymmdd
+            - Copiar CodigoBarras-yyyymmdd-NombreDrogueria.csv a sftp central inventarios-yyyymmdd
+            - OK Se cargan los datos de inventario-yyyymmdd-NombreDrogueria.csv a la bd acopio. script:load_inventario_producto.sh
+            - OK Se cargan los datos CodigoBarras-yyyymmdd-NombreDrogueria.csv a la bd acopio. script:load_codigo_barras
+            - Se cargan los datos de los productos mas vendidos a la bd acopio (por Definir). script:load_mas_vendidos.sh
+            
+        Infraestructura/configuracion requerida
+            - Cliente vpn en cada drogueria conectado a nethServerVoxoni
+            - Servidor sftp central que permita el acceso desde clientes vpn drogueria
+            - Servidor mysql central (puede ser el mismo sftp)
+
+    b) Extraer datos de WC
+        - OK Ejecutar query_inventario_WC para extraer inventario-yyyymmdd-WC.csv 
+        - Mover a sftp central inventarios-yyyymmdd
+
+    c) Reportar inconsistencias, script: Inconsistencias.sql
+        Un producto es consistente cuando cumple las siguientes condiciones
+        - Los codigos son consistentes en las tres droguerias. Un c  odigo se considera consistente cuando:
+            - Los codigos con iguales.
+            - Los codigos son diferentes pero son codigos de barras pertenecientes al mismo producto.
+        - Su Nombre  es igual en las tres droguerias.
+        - Su costo para cada presentacion es similar en las tres droguerias con una variacion no mayor al porcentaje definido por la gerencia  
+        - Las cantidades para cada presentacion coinciden
+        - La categorizacion de los productos coinciden.
+
+        Especificacion del reporte de inconsistencias:
+
+            Titulo columna: Inconsistencia; Contenido: nombre de la inconsistencia
+            Titulo columna: Codigo producto Suba; Contenido: codigo del producto en drogueria suba.
+            Titulo columna: Campo inconsistente Suba; Contenido: valor del campo en drogueria suba.
+            ...
+            Titulo columna: Codigo producto N; Contenido: codigo del producto en drogueria N.
+            Titulo columna: Campo inconsistente N; Contenido: valor del campo en drogueria N. 
+
+4) Ajuste de inconsistencias.
+
+    Las inconsistencias se reportan a operaciones para que sean ajustadas en Dominium plus.
+    Falta especifica un proseso para realizar segimiento a las correcciones que se realicen.
+
+
+
+5) Calculo de precios para la tienda:
+
+   Los precios de venta al publico se calculan aplicando un porcentaje definido para la categoria y presentacion del producto.
+   Se tendra en la bd de acopio una tabla en donde se especifica el porcentaje de incremento sobre el costo para cada categoria y presentacion.
+
+
+6)  Actualizar inventario en WC
+
+    - Generar inventario-yyyymmdd.csv de los productos con cambios respecto al inventario de WC.
+        Si los productos son consistentes almenos en dos droguerias, se cargan con el mayor precio publico calculado y se suman los inventarios de las droguerias
+            los codigos de estos productos empiezan por la letra Z ejemplo: Z100000047
+            los productos inconsistentes se casrgan segun la siguiente regla. 
+        Si los productos son inconsistentes, se cargan de manera independiente con su precio calculado. 
+            esto da como resultado que el mismo productos aparezca con diferente precio, nombre o categoria
+            los codigos de estos productos empiezan por una letra que identifica la drogueria, Ejemplo: A100000047
+        Codificacion para las droguerias:
+            BellaVista: A
+            CiudadJardin: B
+            La9: C
+            La68: D
+            La95: E 
+            SantaSofia: F
+            Suba: G
+            Villas: H
+            
+    - Copiar archivo a ftp WC
+    - OK Actualizar inventario en WC usando algoritmo_cargue_wc
+    - 50% Cargar imagenes de los productos que no tienen imagen cargada 
+
+7) Alertar errores de procesos
+    - Alertar droguerias que no reportaron inventario diario
+    - Alertar errores de todos los procesos
+    - Alertar inconsistencias de cargue del archivo
+    - Enviar email diario de OK o error 
+
+
+* Pendientes
+    - Evaluar posibilidad de encender equipos remotamentes
+    - Definir SEO de productos
+    - Buscar hosting para el portal
+    - Definir Categorias de productos
+    - Definir procedimiento de consoliacion de ventas
+    - Difinir proceso de discrepancias en bases de datos de droguerias
+
+* Preguntas
+    - ¿Que precio elegir al momento que se presenten diferencias en los precios de los productos en las diferente droguerias'
+    - En la base de datos se encuentran productos registarados por id de coopidrogas o codigo de barras ¿Se tiene algun protocolo para elegir con que codigo de registra en Dominiun plus?
+
+
+

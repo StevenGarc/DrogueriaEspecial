@@ -1,0 +1,64 @@
+Algoritmo cargue inventarios de productos a partir de dominium plus.
+
+periodicamente se cargara/actualizara el inventario de la tienda a partir del archivo csv usando estas reglas para cada registro 
+la tabla consolidada y temporal tienen la misma estructura del csv y adicional tres columnas para el precio publico  (pendiente validar si son 2 o un csv)
+
+
+Consolidar los inventarios de caja, blister y unidad de todas las droguerias a cargar:
+    borrar tabla consolidada y temporal
+    para cada archivo csv a cargar:
+        si es la primera drogueria:
+            cargar directamente a tabla consolidada
+        si no:
+            Cargar a tabla temporal
+            para cada registro de la tabla temporal
+                si producto existe:
+                    sumar al inventario de la tabla consolidada el inventario de la tabla temporal 
+                si no:
+                    insertar en la tabla consolidada el producto de la tabla temporal
+
+Para cada producto de la tabla consolidada: 
+
+    si no existe el SKU(CodProducto) existe en la tienda:
+        crear producto: pendiente definir
+
+    si InventarioCaja > 0:
+        si producto tiene variacion Caja:
+            Actualizar InventarioCaja
+            Actualizar precio publico
+        si no:
+            Crear variacion Caja
+            Actualizar InventarioCaja
+            Actualizar precio publico
+    si no:
+        si producto tiene variacion Caja:
+            Actualizar InventarioCaja
+            Actualizar precio publico
+
+    si InventarioBlister > 0:
+        si producto tiene variacion Blister:
+            Actualizar InventarioBlister
+            Actualizar precio publico
+        si no:
+            Crear variacion Blister
+            Actualizar InventarioBlister
+            Actualizar precio publico
+    si no:
+        si producto tiene variacion Blister:
+            Actualizar InventarioBlister
+            Actualizar precio publico
+
+    si InventarioUnidad > 0:
+        si producto tiene variacion Unidad:
+            Actualizar InventarioUnidad
+            Actualizar precio publico
+        si no:
+            Crear variacion Unidad
+            Actualizar InventarioUnidad
+            Actualizar precio publico
+    si no:
+        si producto tiene variacion Unidad:
+            Actualizar InventarioUnidad
+            Actualizar precio publico
+
+
